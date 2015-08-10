@@ -1,12 +1,6 @@
-# Shockball
-Competitive AI programming in a dodge ball like game
+Road-Map:
 
-# Road-Map
-Populate Readme with actual description of use and simulation rules
-AI import from subfolder
-CLI option for framerate as value
-
-# Complete
+Complete:
 Clamp velocity of move to distance needed to reach target
 limit AI outputs from effecting other team's players
 Fix ball duplication and flightless ball buginess
