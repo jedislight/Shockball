@@ -17,7 +17,10 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players
 
 # Running a Game
-* TODO
+* python main_window.py team1Name team2Name [-options]
+  * -slow_sim : runs the simulation at 4 fps for easy debugging
+  * -quick_sim : runs the simulation to completion as fast as possible then draws the result. Good for quick win ratio gauging
+  * -draw_target : draws the move targets of the players
 
 # Road-Map
 * Populate Readme with actual description of use and simulation rules
