@@ -90,9 +90,11 @@ class PlayerUpdateInstructions(object):
         
         self.throw_target = vector.Vector()
         self.is_throwing = False
+        self.throw_power = 1.0
         
         self.pass_target = vector.Vector()
         self.is_passing = False
+        self.pass_power = 1.0
         
         self.number = number
         
@@ -184,11 +186,13 @@ class GroundedBall(object):
         pass
     
 class InFlightBall(object):
-    def __init__(self, target_x , target_y, position_x, position_y, thrower, is_throw):
+    def __init__(self, target_x , target_y, position_x, position_y, thrower, is_throw, power=1.0):
+        power = min(power, 1.0)
+        power = max(power, 0.0)
         self.position = vector.Vector(position_x, position_y)
         self.previous_position = self.position
         self.target = vector.Vector(target_x, target_y)
-        self.velocity = (self.target - self.position).normalize() * thrower.throw * 2
+        self.velocity = (self.target - self.position).normalize() * thrower.throw * 2 * power
         self.updates_left = 5
         self.thrower = thrower
         self.is_throw = is_throw
@@ -321,12 +325,14 @@ class Simulation(object):
             instructions = players_instructions[player]
             if instructions.is_throwing or instructions.is_passing:                
                 target = instructions.throw_target
+                power = instructions.throw_power
                 if instructions.is_passing:
                     target = instructions.pass_target
+                    power = instructions.pass_power                  
                 
                 player.has_ball = False
                 ball = InFlightBall(target.x, target.y, player.position.x, 
-                                   player.position.y, player, instructions.is_throwing)
+                                   player.position.y, player, instructions.is_throwing, power)
                 self.in_flight_balls.append(ball)
         
         #ball grounding
