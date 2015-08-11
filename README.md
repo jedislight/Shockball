@@ -26,7 +26,6 @@ Every time a player is hit they must run back to their starting wall before re-e
 * AI import from subfolder
 * CLI option for framerate as value
 * Tutorial Teams
-* Stat prebuilts with fancy names
 
 # Complete
 * Clamp velocity of move to distance needed to reach target
@@ -47,3 +46,4 @@ Every time a player is hit they must run back to their starting wall before re-e
 * In flight balls now do line segment collision to prevent tunneling
 * Python 3.X
 * Populate Readme with actual description of use and simulation rules
+* Stat prebuilts with fancy names
