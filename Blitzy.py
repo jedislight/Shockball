@@ -1,46 +1,26 @@
 import Simulation
 import ActionAIFramework
+import EasyStatsFramework
+import PlayerStatsPrebuilts
 import vector
 
-class Blitzy(ActionAIFramework.ActionAIFramework):
+class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework):
     def __init__(self):
         ActionAIFramework.ActionAIFramework.__init__(self)
+        EasyStatsFramework.EasyStatsFramework.__init__(self)
         self.player_starting_positions = {}
-        self.actions = [self.Action_AvoidIncomingBall
-                   , self.Action_AttackClosestOpponent
-                   , self.Action_CatchIncomingPass
-                   , self.Action_GetClosestBall
-                   , self.Action_PassBack
-                   , self.Action_ReturnToStart
-                   ]        
+        self.actions = [  self.Action_AvoidIncomingBall
+                        , self.Action_AttackClosestOpponent
+                        , self.Action_CatchIncomingPass
+                        , self.Action_GetClosestBall
+                        , self.Action_PassBack
+                        , self.Action_ReturnToStart
+                       ]        
+        self.stats = [ PlayerStatsPrebuilts.blitzer, PlayerStatsPrebuilts.blitzer, PlayerStatsPrebuilts.blitzer ]        
         
-    def GetPlayerStats(self, player_number):
-        stats = [  None
-                 , self.Stats_Blitzer
-                 , self.Stats_Blitzer
-                 , self.Stats_Blitzer
-                 ]
-        return stats[player_number]()
-    
     def Update(self, ai_input):
         self.SetupStartingPositionsOnFirstUpdate(ai_input)
         return ActionAIFramework.ActionAIFramework.Update(self, ai_input)
-
-    def Stats_Blitzer(self):
-        stats = Simulation.PlayerStats()
-        stats.pick = 1
-        stats.throw = 1
-        stats.run = 3
-        stats.stamina = 3
-        return stats
-
-    def Stats_Striker(self):
-        stats = Simulation.PlayerStats()
-        stats.pick = 1
-        stats.throw = 3
-        stats.run = 3
-        stats.stamina = 1
-        return stats
 
     def GetClosestAttackableOpponent(self, player, ai_input):
         target = self.GetClosestObject(player.position, [target for target in ai_input.player_infos if target.team != player.team and target.has_been_hit != True])

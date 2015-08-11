@@ -23,7 +23,6 @@ Every time a player is hit they must run back to their starting wall before re-e
   * -draw_target : draws the move targets of the players
 
 # Road-Map
-* Populate Readme with actual description of use and simulation rules
 * AI import from subfolder
 * CLI option for framerate as value
 * Tutorial Teams
@@ -47,3 +46,4 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Run now has root growth (IE runspeed == 1, 1.4, 1.7)
 * In flight balls now do line segment collision to prevent tunneling
 * Python 3.X
+* Populate Readme with actual description of use and simulation rules
