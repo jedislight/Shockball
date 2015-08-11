@@ -23,11 +23,10 @@ Every time a player is hit they must run back to their starting wall before re-e
   * -draw_target : draws the move targets of the players
 
 # Road-Map
-* AI import from subfolder
-* CLI option for framerate as value
-* Tutorial Teams
+* See Issues https://github.com/jedislight/Shockball/issues
 
 # Complete
+* See Issues https://github.com/jedislight/Shockball/issues
 * Clamp velocity of move to distance needed to reach target
 * Limit AI outputs from effecting other team's players
 * Fix ball duplication and flightless ball buginess
