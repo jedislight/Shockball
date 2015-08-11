@@ -28,7 +28,6 @@ Every time a player is hit they must run back to their starting wall before re-e
 * CLI option for framerate as value
 * Tutorial Teams
 * Stat prebuilts with fancy names
-* Python 3.X
 
 # Complete
 * Clamp velocity of move to distance needed to reach target
@@ -47,3 +46,4 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Picking now has squared growth (IE pick chance per frame == 1/20, 4,20, 9/20) value to encourage high pick scores
 * Run now has root growth (IE runspeed == 1, 1.4, 1.7)
 * In flight balls now do line segment collision to prevent tunneling
+* Python 3.X
