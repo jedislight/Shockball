@@ -9,13 +9,16 @@ class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFr
         ActionAIFramework.ActionAIFramework.__init__(self)
         EasyStatsFramework.EasyStatsFramework.__init__(self)
         self.player_starting_positions = {}
-        self.actions = [  self.Action_AvoidIncomingBall
+        self.strategy = [  self.Action_AvoidIncomingBall
                         , self.Action_AttackClosestOpponent
                         , self.Action_CatchIncomingPass
                         , self.Action_GetClosestBall
                         , self.Action_PassBack
                         , self.Action_ReturnToStart
                        ]        
+        self.actions[1] = self.strategy
+        self.actions[2] = self.strategy
+        self.actions[3] = self.strategy
         self.stats = [ PlayerStatsPrebuilts.blitzer, PlayerStatsPrebuilts.blitzer, PlayerStatsPrebuilts.blitzer ]        
         
     def Update(self, ai_input):
