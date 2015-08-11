@@ -28,6 +28,7 @@ Every time a player is hit they must run back to their starting wall before re-e
 * CLI option for framerate as value
 * Tutorial Teams
 * Stat prebuilts with fancy names
+* Python 3.X
 
 # Complete
 * Clamp velocity of move to distance needed to reach target
