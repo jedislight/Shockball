@@ -29,7 +29,7 @@ class Basic(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFra
     def Action_AttackClosestOpponent(self, player, instructions, ai_input):
         target = self.GetClosestAttackableOpponent(player, ai_input)
         blocker = self.GetClosestObject(player.position, [p for p in ai_input.player_infos if p.number != player.number])
-        if blocker and blocker.team == player.team:
+        if blocker and blocker.team == player.team and target:
             #just move
             instructions.move_target = target.position
             return True
