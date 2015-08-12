@@ -83,7 +83,7 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
         return False    
     
     def Action_CircleStart(self, player, instructions, ai_input):
-        frequency = 40.0
+        frequency = 10.0
         t = self.updates / frequency
         x_offset = math.sin(t / 2 * math.pi) * 10
         y_offset = math.cos(t / 2 * math.pi) * 10
