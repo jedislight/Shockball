@@ -303,7 +303,7 @@ class Simulation(object):
         
         #pick
         for player in self.players:
-            if players_instructions[player].is_picking:
+            if players_instructions[player].is_picking and player.has_been_hit == False:
                 if len(self.grounded_balls) > 0:
                     nearest_ball = None
                     nearest_distance = arena_size * 10
