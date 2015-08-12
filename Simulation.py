@@ -2,7 +2,7 @@ import vector
 import random
 import math
 
-arena_size = 100
+arena_size = 100  
 
 class AI(object):
     def __init__(self):

@@ -2,14 +2,15 @@ import math
 
 import Simulation
 import vector
-import EasyStatsFramework
-import ActionAIFramework
+import Frameworks.ActionAIFramework as ActionAIFramework
+import Frameworks.EasyStatsFramework as EasyStatsFramework
+import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
 import PlayerStatsPrebuilts
-
-class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAIFramework):
+class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAIFramework, CommonQueryAIFramework.CommonQueryAIFramework):
     def __init__(self):
         EasyStatsFramework.EasyStatsFramework.__init__(self)
         ActionAIFramework.ActionAIFramework.__init__(self)
+        CommonQueryAIFramework.CommonQueryAIFramework.__init__(self)
         self.stats = [PlayerStatsPrebuilts.catapault, PlayerStatsPrebuilts.dervish, PlayerStatsPrebuilts.catapault]
         self.mode_fetcher = [self.Action_Dodge, self.Action_GetFieldBall, self.Action_PassBallToTeammate, self.Action_StoreBallAtBase, self.Action_GetClosestBall, self.Action_CircleStart]
         self.mode_turret = [self.Action_Dodge, self.Action_CatchPass, self.Action_ThrowAtNearbyOpponent, self.Action_CircleStart]
@@ -144,21 +145,3 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
         if len(self.player_starting_positions) == 0:    
             for player in ai_input.player_infos:
                 self.player_starting_positions[player.number] = player.position
-    
-    def GetClosestInFlightThrownBall(self, player, ai_input):
-        avoid = self.GetClosestObject(player.position, [ball for ball in ai_input.in_flight_ball_infos if ball.is_throw])
-        return avoid    
-    
-    def GetClosestObject(self, origin, objects):
-        result = None
-        if objects:    
-            distances = [(origin - obj.position).length for obj in objects]
-            result = objects[distances.index(min(distances))]                    
-        return result     
-    
-    def GetClosestTeamateWithoutBall(self, player, ai_input):
-        return self.GetClosestObject(player.position, [player for player in ai_input.player_infos if player.team == ai_input.team and player.has_ball == False])
-
-    def GetClosestAttackableOpponent(self, player, ai_input):
-        target = self.GetClosestObject(player.position, [target for target in ai_input.player_infos if target.team != player.team and target.has_been_hit != True])
-        return target

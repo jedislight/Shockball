@@ -1,13 +1,15 @@
 import Simulation
-import ActionAIFramework
-import EasyStatsFramework
+import Frameworks.ActionAIFramework as ActionAIFramework
+import Frameworks.EasyStatsFramework as EasyStatsFramework
+import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
 import PlayerStatsPrebuilts
 import vector
 
-class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework):
+class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework, CommonQueryAIFramework.CommonQueryAIFramework):
     def __init__(self):
         ActionAIFramework.ActionAIFramework.__init__(self)
         EasyStatsFramework.EasyStatsFramework.__init__(self)
+        CommonQueryAIFramework.CommonQueryAIFramework.__init__(self)
         self.player_starting_positions = {}
         self.strategy = [  self.Action_AvoidIncomingBall
                         , self.Action_AttackClosestOpponent
@@ -24,14 +26,6 @@ class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFr
     def Update(self, ai_input):
         self.SetupStartingPositionsOnFirstUpdate(ai_input)
         return ActionAIFramework.ActionAIFramework.Update(self, ai_input)
-
-    def GetClosestAttackableOpponent(self, player, ai_input):
-        target = self.GetClosestObject(player.position, [target for target in ai_input.player_infos if target.team != player.team and target.has_been_hit != True])
-        return target
-
-    def GetClosestInFlightThrownBall(self, player, ai_input):
-        avoid = self.GetClosestObject(player.position, [ball for ball in ai_input.in_flight_ball_infos if ball.is_throw])
-        return avoid
 
     def SetupStartingPositionsOnFirstUpdate(self, ai_input):
         if len(self.player_starting_positions) == 0:    
@@ -110,17 +104,3 @@ class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFr
     def Action_ReturnToStart(self, player, instructions, ai_input):
         instructions.move_target = self.player_starting_positions[player.number]
         return True    
-
-    def GetClosestObject(self, origin, objects):
-        result = None
-        if objects:    
-            distances = [(origin - obj.position).length for obj in objects]
-            result = objects[distances.index(min(distances))]                    
-        return result    
-    
-    def GetClosest(self, origin, positions):
-        result = None
-        if positions:    
-            distances = [(origin - position).length for position in positions]
-            result = positions[distances.index(min(distances))]                    
-        return result
