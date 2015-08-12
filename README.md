@@ -16,6 +16,11 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Overload the Update() method to build your own AIOutput object based on the state of the AIInupt object
 * Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players
 
+The AIOutput object needs to be provided a PlayerUpdateInstructions object for each player. The PlayerUpdateInstructions object supports 4 actions:
+* is_moving - when true moves to the move_target position
+* is_passing - when true passes (harmless) to the pass_target position, pass_power can be set from 0.0 -> 1.0 to scale back the strength of the pass, defaults to full power
+* is_throwing - when true throws (harmful) to the throw_target position, throw_power can be set from 0.0 -> 1.0 to scale back the strength of the throw, defaults to full power
+
 # Running a Game
 * python main_window.py team1Name team2Name [-options]
   * -slow_sim : runs the simulation at 4 fps for easy debugging
@@ -24,25 +29,3 @@ Every time a player is hit they must run back to their starting wall before re-e
 
 # Road-Map
 * See Issues https://github.com/jedislight/Shockball/issues
-
-# Complete
-* See Issues https://github.com/jedislight/Shockball/issues
-* Clamp velocity of move to distance needed to reach target
-* Limit AI outputs from effecting other team's players
-* Fix ball duplication and flightless ball buginess
-* Bulk simulation option
-* Visual difference between team members
-* Data drive AI module loading
-* Allow AI to set stats of players during simulation construction
-* Ball flight w/ throw 1 should be the only speed that can be outrun, and only by a run 3
-* Balls locked into play field with bounce
-* Players locked into play field
-* -draw_targets available to show player destinations
-* Frame rate adjusted to be more viewable
-* In flight balls made frame based instead of time based
-* Picking now has squared growth (IE pick chance per frame == 1/20, 4,20, 9/20) value to encourage high pick scores
-* Run now has root growth (IE runspeed == 1, 1.4, 1.7)
-* In flight balls now do line segment collision to prevent tunneling
-* Python 3.X
-* Populate Readme with actual description of use and simulation rules
-* Stat prebuilts with fancy names
