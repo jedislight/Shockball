@@ -6,9 +6,11 @@ import Simulation
 
 class Controller(object):
     def __init__(self):
+        self.master = Tk()
+        
         self.quick_sim = "-quick_sim" in os.sys.argv
         self.slow_sim = "-slow_sim" in os.sys.argv
-        self.draw_target = "-draw_target" in os.sys.argv
+        self.draw_target = BooleanVar(master=self.master, value="-draw_target" in os.sys.argv)
         self.bouncy_ball = "-bouncy_ball" in os.sys.argv
         self.ai0_module = __import__(os.sys.argv[1])
         self.ai1_module = __import__(os.sys.argv[2])
@@ -20,17 +22,30 @@ class Controller(object):
                 self.team_1_ai = class_object[1]()
                 break
         
+        self.menu_bar = Menu(self.master)
+        
+        self.shockball_menu = Menu(self.menu_bar)
+        self.shockball_menu.add_command(label="New Game", command=self.NewGame, accelerator="F2")
+        self.shockball_menu.add_checkbutton(label="Draw Targets", onvalue = True, offvalue = False, variable=self.draw_target)
+        self.master.bind_all("<F2>", self.NewGame)
+        
+        self.menu_bar.add_cascade(label = "Shockball", menu=self.shockball_menu)
+        
+        self.master.config(menu = self.menu_bar)
+        
+        self.w = Canvas(self.master, width=500, height=500)
+        self.w.pack()
+        
+        self.NewGame()
+        
+    def NewGame(self, event=None):
         self.simulation = Simulation.Simulation(self.team_0_ai, self.team_1_ai)
 
         if self.bouncy_ball:
             ball = Simulation.InFlightBall(20.0, 41.0, 50.0,50.0, self.simulation.players[0], True)
             ball.updates_left = 9999            
-            self.simulation.in_flight_balls.append(ball)
-        
-        self.master = Tk()
-        
-        self.w = Canvas(self.master, width=500, height=500)
-        self.w.pack()
+            self.simulation.in_flight_balls.append(ball)        
+        return
         
     def MainLoop(self):
         self.Update()
@@ -78,7 +93,7 @@ class Controller(object):
             self.w.create_text((player.position.x-2.5) * 5, player.position.y * 5, text = str(player.number))
             if player.has_ball:
                 self.w.create_rectangle(player.position.x*5, player.position.y*5 - 2.5, player.position.x*5 + 5, player.position.y*5 + 2.5)
-            if self.draw_target:
+            if self.draw_target.get():
                 self.w.create_line(player.position.x*5, player.position.y*5, player.move_target.x*5, player.move_target.y*5, fill=color)
         for ball in self.simulation.grounded_balls:
                 self.w.create_rectangle(ball.position.x*5 - 2.5, ball.position.y*5 - 2.5, ball.position.x*5 + 2.5, ball.position.y*5 + 2.5)
