@@ -2,20 +2,31 @@ from tkinter import *
 import os
 import inspect
 import importlib
+import argparse
 
 import Simulation
 import Team
 
 class Controller(object):
     def __init__(self):
-        self.master = Tk()
+        parser = argparse.ArgumentParser(description="Competitive AI programming in a dodge ball like game.")
+        parser.add_argument("teams", nargs="+", help="the 2 teams to face off")
+        speed_group = parser.add_mutually_exclusive_group()
+        speed_group.add_argument("--quick_sim", "-q", action="store_true", help="Simulates games as fast as possible")
+        speed_group.add_argument("--fps", "-f", action="store", type=int, default=20, help="Sets simulation speed")
+        parser.add_argument("--draw_target", "-d", action="store_true", help="Draws the destination of players for debugging")
+        parser.add_argument("--bouncy_ball", action="store_true", help="Adds a bouncy ball to the game for debugging")
+        args = parser.parse_args(os.sys.argv[1:])
         
-        self.quick_sim = "-quick_sim" in os.sys.argv
-        self.slow_sim = "-slow_sim" in os.sys.argv
-        self.draw_target = BooleanVar(master=self.master, value="-draw_target" in os.sys.argv)
-        self.bouncy_ball = "-bouncy_ball" in os.sys.argv
-        self.ai0_module = importlib.import_module("Team.{0}".format(os.sys.argv[1]))
-        self.ai1_module = importlib.import_module("Team.{0}".format(os.sys.argv[2]))
+        self.master = Tk()      
+        
+        self.fps = args.fps    
+        self.quick_sim = args.quick_sim
+        self.draw_target = BooleanVar(master=self.master, value=args.draw_target)
+        self.bouncy_ball = args.bouncy_ball
+        self.ai0_module = importlib.import_module("Team.{0}".format(args.teams[0]))
+        self.ai1_module = importlib.import_module("Team.{0}".format(args.teams[1]))
+        
         self.wins = [0,0,0]
         for class_object in inspect.getmembers(self.ai0_module, inspect.isclass):
                 self.team_0_ai = class_object[1]()
@@ -23,7 +34,7 @@ class Controller(object):
         for class_object in inspect.getmembers(self.ai1_module, inspect.isclass):
                 self.team_1_ai = class_object[1]()
                 break
-        
+
         self.menu_bar = Menu(self.master)
         
         self.shockball_menu = Menu(self.menu_bar)
@@ -66,10 +77,7 @@ class Controller(object):
             if self.simulation.winning_team != -1 and self.simulation.winning_team_won_on_update == self.simulation.update_count:
                 self.wins[self.simulation.winning_team] += 1
         
-        fps = 20
-        if self.slow_sim:
-            fps = 4
-        self.master.after(int(1000.0/fps),self.Update)
+        self.master.after(int(1000.0/self.fps),self.Update)
             
     def DrawSimulation(self):
         self.w.delete(ALL)
