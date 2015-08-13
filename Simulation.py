@@ -47,7 +47,6 @@ class Player(object):
             else:
                 direction = vector.Vector(0,1)
                 
-            print(self.run)
             velocity = direction * math.sqrt(self.run)
             self.position = self.position + velocity
             if (self.team == 0 and self.position.y <= 0) or (self.team == 1 and self.position.y >= Simulation.arena_size):
