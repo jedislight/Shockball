@@ -47,6 +47,7 @@ class Player(object):
             else:
                 direction = vector.Vector(0,1)
                 
+            print(self.run)
             velocity = direction * math.sqrt(self.run)
             self.position = self.position + velocity
             if (self.team == 0 and self.position.y <= 0) or (self.team == 1 and self.position.y >= Simulation.arena_size):
@@ -272,7 +273,7 @@ class Simulation(object):
         
         #player elimination
         for player in self.players[:]:
-            if player.run * player.pick * player.throw == 0:
+            if player.run <=0 or player.pick <=0 or player.throw <= 0:
                 self.players.remove(player)
                 self.le_tired_players.append(LeTiredPlayer(player.position.x, player.position.y, player.team))
                 
