@@ -1,7 +1,7 @@
-import Simulation
+from AI import PlayerStats
 
 def __MakeStats(pick=2, run=2, stamina=2, throw=2):
-    stats = Simulation.PlayerStats()
+    stats = PlayerStats()
     stats.pick = pick
     stats.run = run
     stats.stamina = stamina

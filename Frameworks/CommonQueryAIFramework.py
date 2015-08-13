@@ -1,8 +1,11 @@
+'''
+Common Query Operations, feel like writing GetClosestAttackableOpponent for the 1001th time - I thought not
+'''
 import math
 import vector
-import Simulation
+from AI import AI
 
-class CommonQueryAIFramework(Simulation.AI):
+class CommonQueryAIFramework(AI):
     def __init__(self):
         pass
     

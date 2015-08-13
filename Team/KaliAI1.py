@@ -2,19 +2,22 @@
 RoadMap:
 Prevent friendly fire
 """
-import Simulation
+from AI import AI
+from AI import PlayerUpdateInstructions
+from AI import AIOutput
 import vector
 
-class KaliAI1(Simulation.AI):
+@AI.Team
+class KaliAI1(AI):
     def __init__(self):
         pass
     def Update(self, ai_input):
-        output = Simulation.AIOutput()
+        output = AIOutput()
         #Build Player Update Instructions per Player We Have
         for player in ai_input.player_infos:
             if player.team != ai_input.team:
                 continue
-            ins = Simulation.PlayerUpdateInstructions(player.number)
+            ins = PlayerUpdateInstructions(player.number)
             targetable_players = self.GetTargetablePlayers(ai_input, player)
             targeted_player = self.GetClosestOfPositionalObjects(player, targetable_players)
             #First Round Instructions

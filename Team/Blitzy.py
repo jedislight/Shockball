@@ -1,15 +1,17 @@
-import Simulation
-import Frameworks.ActionAIFramework as ActionAIFramework
-import Frameworks.EasyStatsFramework as EasyStatsFramework
-import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
+from AI import AI
+from AI import PlayerUpdateInstructions
+from Frameworks.ActionAIFramework import ActionAIFramework
+from Frameworks.EasyStatsFramework import EasyStatsFramework
+from Frameworks.CommonQueryAIFramework import CommonQueryAIFramework
 import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 import vector
 
-class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework, CommonQueryAIFramework.CommonQueryAIFramework):
+@AI.Team
+class Blitzy(ActionAIFramework, EasyStatsFramework, CommonQueryAIFramework):
     def __init__(self):
-        ActionAIFramework.ActionAIFramework.__init__(self)
-        EasyStatsFramework.EasyStatsFramework.__init__(self)
-        CommonQueryAIFramework.CommonQueryAIFramework.__init__(self)
+        ActionAIFramework.__init__(self)
+        EasyStatsFramework.__init__(self)
+        CommonQueryAIFramework.__init__(self)
         self.player_starting_positions = {}
         self.strategy = [  self.Action_AvoidIncomingBall
                         , self.Action_AttackClosestOpponent
@@ -25,18 +27,13 @@ class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFr
         
     def Update(self, ai_input):
         self.SetupStartingPositionsOnFirstUpdate(ai_input)
-        return ActionAIFramework.ActionAIFramework.Update(self, ai_input)
+        return ActionAIFramework.Update(self, ai_input)
 
     def SetupStartingPositionsOnFirstUpdate(self, ai_input):
         if len(self.player_starting_positions) == 0:    
             for player in ai_input.player_infos:
                 self.player_starting_positions[player.number] = player.position
 
-    def BuildDefaultInstruction(self, player):
-        instructions = Simulation.PlayerUpdateInstructions(player.number)
-        instructions.move_target = player.position
-        instructions.is_moving = True # always moving
-        return instructions
 
     def Action_AvoidIncomingBall(self, player, instructions, ai_input):
         ball = self.GetClosestInFlightThrownBall(player, ai_input)

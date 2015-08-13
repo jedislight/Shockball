@@ -1,17 +1,18 @@
 import math
 
-import Simulation
+from AI import AI
 import vector
-import Frameworks.ActionAIFramework as ActionAIFramework
-import Frameworks.EasyStatsFramework as EasyStatsFramework
-import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
+from Frameworks.ActionAIFramework import ActionAIFramework
+from Frameworks.EasyStatsFramework import EasyStatsFramework
+from Frameworks.CommonQueryAIFramework import CommonQueryAIFramework
 import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 
-class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAIFramework, CommonQueryAIFramework.CommonQueryAIFramework):
+@AI.Team
+class Fortress(EasyStatsFramework, ActionAIFramework, CommonQueryAIFramework):
     def __init__(self):
-        EasyStatsFramework.EasyStatsFramework.__init__(self)
-        ActionAIFramework.ActionAIFramework.__init__(self)
-        CommonQueryAIFramework.CommonQueryAIFramework.__init__(self)
+        EasyStatsFramework.__init__(self)
+        ActionAIFramework.__init__(self)
+        CommonQueryAIFramework.__init__(self)
         self.stats = [PlayerStatsPrebuilts.catapault, PlayerStatsPrebuilts.dervish, PlayerStatsPrebuilts.catapault]
         self.mode_fetcher = [self.Action_Dodge, self.Action_GetFieldBall, self.Action_PassBallToTeammate, self.Action_StoreBallAtBase, self.Action_GetClosestBall, self.Action_CircleStart]
         self.mode_turret = [self.Action_Dodge, self.Action_CatchPass, self.Action_ThrowAtNearbyOpponent, self.Action_CircleStart]
@@ -34,7 +35,7 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
             self.actions[1] = self.mode_solo
             self.actions[2] = self.mode_solo
             self.actions[3] = self.mode_solo
-        return ActionAIFramework.ActionAIFramework.Update(self, ai_input)
+        return ActionAIFramework.Update(self, ai_input)
                  
     def Action_Dodge(self, player, instructions, ai_input):
         ball = self.GetClosestInFlightThrownBall(player, ai_input)
@@ -50,7 +51,7 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
     
     def Action_GetFieldBall(self, player, instructions, ai_input):
         if ai_input.grounded_ball_infos and not player.has_ball:
-            ball = self.GetClosestObject(player.position, [ball for ball in ai_input.grounded_ball_infos if abs(ball.position.y - self.player_starting_positions[player.number].y) >= Simulation.arena_size * self.base_field_percent])
+            ball = self.GetClosestObject(player.position, [ball for ball in ai_input.grounded_ball_infos if abs(ball.position.y - self.player_starting_positions[player.number].y) >= ai_input.arena_size * self.base_field_percent])
             if ball:
                 distance = (ball.position - player.position).length
                 if distance < 2.0:
@@ -76,7 +77,7 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
             target = self.player_starting_positions[player.number]
             instructions.move_target = target
             distance_to_start = (player.position - target).length
-            if distance_to_start < Simulation.arena_size * self.base_field_percent:
+            if distance_to_start < ai_input.arena_size * self.base_field_percent:
                 instructions.is_passing = True
                 instructions.pass_power = 0.0
                 instructions.pass_target = target
@@ -90,7 +91,7 @@ class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAI
         y_offset = math.cos(t / 2 * math.pi) * 10
         instructions.move_target = vector.Vector(self.player_starting_positions[player.number].x, self.player_starting_positions[player.number].y)
         if instructions.move_target.y == 0.0:
-            instructions.move_target.y += Simulation.arena_size * self.base_field_percent
+            instructions.move_target.y += ai_input.arena_size * self.base_field_percent
         else:
             instructions.move_target.y -= Simulation.arena_size * self.base_field_percent
             

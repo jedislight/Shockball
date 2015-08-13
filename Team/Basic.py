@@ -1,15 +1,16 @@
-import Simulation
-import Frameworks.ActionAIFramework as ActionAIFramework
-import Frameworks.EasyStatsFramework as EasyStatsFramework
-import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
-import PlayerStatsPrebuilts
+from AI import AI
+from Frameworks.ActionAIFramework import ActionAIFramework
+from Frameworks.EasyStatsFramework import EasyStatsFramework
+from Frameworks.CommonQueryAIFramework import CommonQueryAIFramework
+import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 import vector
 
-class Basic(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework, CommonQueryAIFramework.CommonQueryAIFramework):
+@AI.Team
+class Basic(ActionAIFramework, EasyStatsFramework, CommonQueryAIFramework):
     def __init__(self):
-        ActionAIFramework.ActionAIFramework.__init__(self)
-        EasyStatsFramework.EasyStatsFramework.__init__(self)
-        CommonQueryAIFramework.CommonQueryAIFramework.__init__(self)
+        ActionAIFramework.__init__(self)
+        EasyStatsFramework.__init__(self)
+        CommonQueryAIFramework.__init__(self)
         logic = [self.Action_GetClosestBall, self.Action_AttackClosestOpponent]
         self.actions[1] = logic
         self.actions[2] = logic

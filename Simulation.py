@@ -1,103 +1,8 @@
 import vector
 import random
 import math
+from AI import *
 
-arena_size = 100  
-
-class AI(object):
-    def __init__(self):
-        pass
-    
-    def Update(self, ai_input):
-        return AIOutput()
-    
-    def GetPlayerStats(self, player_number):
-        """player number will be 1,2, or 3"""
-        return PlayerStats() # default stats for any player
-
-class AIInput(object):
-    def __init__(self, simulation, team):
-        self.arena_size = arena_size
-        
-        self.team = team 
-        
-        self.player_infos = []
-        for player in simulation.players:
-            self.player_infos.append(PlayerInfo(player, team == player.team))
-            
-        self.grounded_ball_infos = []
-        for ball in simulation.grounded_balls:
-            self.grounded_ball_infos.append(GroundedBallInfo(ball))
-            
-        self.in_flight_ball_infos = []
-        for ball in simulation.in_flight_balls:
-            self.in_flight_ball_infos.append(InFlightBallInfo(ball))
-            
-class AIOutput(object):
-    def __init__(self):
-        self.player_update_instructions = []
-
-class PlayerStats(object):
-    def __init__(self):
-        self.run = 2
-        self.throw = 2
-        self.pick = 2
-        self.stamina = 2
-    
-    def AreValid(self):
-        stats = [self.run, self.throw, self.pick, self.stamina]
-        min_stat = min(stats)
-        max_stat = max(stats)
-        total_stat = sum(stats)
-        return (min_stat == 1 and max_stat == 3 and total_stat == 8) or (min_stat == 2 and max_stat == 2)
-
-class InFlightBallInfo(object):
-    def __init__(self, in_flight_ball):
-        self.position = in_flight_ball.position
-        self.velocity = in_flight_ball.velocity
-        self.thrower = in_flight_ball.thrower
-        self.is_throw = in_flight_ball.is_throw    
-
-class GroundedBallInfo(object):
-    def __init__(self, grounded_ball):
-        self.position = grounded_ball.position
-
-class PlayerInfo(object):
-    def __init__(self, player, is_team_member):
-        self.position = player.position
-        self.team = player.team
-        self.has_ball = player.has_ball
-        self.has_been_hit = player.has_been_hit
-        self.number = player.number
-        
-        if is_team_member:#TODO
-            self.run = player.run
-            self.pick = player.pick
-            self.throw = player.throw
-            self.stamina = player.stamina
-        else:
-            self.run = None
-            self.pick = None
-            self.throw = None
-            self.stamina = None     
-
-class PlayerUpdateInstructions(object):
-    def __init__(self, number):
-        self.move_target = vector.Vector()
-        self.is_moving = False
-        
-        self.is_picking = False
-        
-        self.throw_target = vector.Vector()
-        self.is_throwing = False
-        self.throw_power = 1.0
-        
-        self.pass_target = vector.Vector()
-        self.is_passing = False
-        self.pass_power = 1.0
-        
-        self.number = number
-        
 class LeTiredPlayer(object):
     def __init__(self, position_x, position_y, team):
         self.position = vector.Vector(position_x, position_y)
@@ -144,7 +49,7 @@ class Player(object):
                 
             velocity = direction * math.sqrt(self.run)
             self.position = self.position + velocity
-            if (self.team == 0 and self.position.y <= 0) or (self.team == 1 and self.position.y >= arena_size):
+            if (self.team == 0 and self.position.y <= 0) or (self.team == 1 and self.position.y >= Simulation.arena_size):
                 self.has_been_hit = False
 
         elif player_update_instructions.is_moving == True:
@@ -158,9 +63,9 @@ class Player(object):
             self.position = self.position + impulse
         
         self.position.x = max(0.0, self.position.x)
-        self.position.x = min(arena_size, self.position.x)
+        self.position.x = min(Simulation.arena_size, self.position.x)
         self.position.y = max(0.0, self.position.y)
-        self.position.y = min(arena_size, self.position.y)        
+        self.position.y = min(Simulation.arena_size, self.position.y)        
             
     def TakeDamage(self):
         if self.stamina > 0:
@@ -206,21 +111,21 @@ class InFlightBall(object):
             self.velocity = vector.Vector()
         
         self.position.x = max(0, self.position.x)
-        self.position.x = min(arena_size, self.position.x)
+        self.position.x = min(Simulation.arena_size, self.position.x)
         
         self.position.y = max(0, self.position.y)
-        self.position.y = min(arena_size, self.position.y)        
+        self.position.y = min(Simulation.arena_size, self.position.y)        
         
-        if self.position.x in (0.0, arena_size) or self.position.y in (0.0, arena_size):
+        if self.position.x in (0.0, Simulation.arena_size) or self.position.y in (0.0, Simulation.arena_size):
             #reflect
             n = vector.Vector()
             if self.position.x == 0.0:
                 n = n + vector.Vector(1,0)
-            if self.position.x == arena_size:
+            if self.position.x == Simulation.arena_size:
                 n = n + vector.Vector(-1, 0)
             if self.position.y == 0.0:
                 n = n + vector.Vector(0,-1)
-            if self.position.y == arena_size:
+            if self.position.y == Simulation.arena_size:
                 n = n + vector.Vector(0, 1)
                 
             n.normalize()
@@ -228,6 +133,7 @@ class InFlightBall(object):
             self.velocity = self.velocity -  n * ((self.velocity * n) * 2)
         
 class Simulation(object):
+    arena_size = 100  
     def __init__(self, team_0_ai, team_1_ai):
         self.update_count = 0
         self.winning_team_won_on_update = -1
@@ -256,21 +162,21 @@ class Simulation(object):
         self.players[5].SetStats(team_1_ai.GetPlayerStats(3))      
         
         #set positions
-        self.players[0].position = vector.Vector(.25*arena_size, 0)
-        self.players[1].position = vector.Vector(.50*arena_size, 0)
-        self.players[2].position = vector.Vector(.75*arena_size, 0)
+        self.players[0].position = vector.Vector(.25*self.arena_size, 0)
+        self.players[1].position = vector.Vector(.50*self.arena_size, 0)
+        self.players[2].position = vector.Vector(.75*self.arena_size, 0)
         
-        self.players[3].position = vector.Vector(.25*arena_size, arena_size)
-        self.players[4].position = vector.Vector(.50*arena_size, arena_size)
-        self.players[5].position = vector.Vector(.75*arena_size, arena_size)
+        self.players[3].position = vector.Vector(.25*self.arena_size, self.arena_size)
+        self.players[4].position = vector.Vector(.50*self.arena_size, self.arena_size)
+        self.players[5].position = vector.Vector(.75*self.arena_size, self.arena_size)
         
         #set balls
         self.grounded_balls = [
-            GroundedBall(.50*arena_size, .10*arena_size),
-            GroundedBall(.25*arena_size, .50*arena_size),
-            GroundedBall(.50*arena_size, .50*arena_size),
-            GroundedBall(.75*arena_size, .50*arena_size),
-            GroundedBall(.50*arena_size, .90*arena_size)
+            GroundedBall(.50*self.arena_size, .10*self.arena_size),
+            GroundedBall(.25*self.arena_size, .50*self.arena_size),
+            GroundedBall(.50*self.arena_size, .50*self.arena_size),
+            GroundedBall(.75*self.arena_size, .50*self.arena_size),
+            GroundedBall(.50*self.arena_size, .90*self.arena_size)
         ]
         
         #setup inflight balls
@@ -306,7 +212,7 @@ class Simulation(object):
             if players_instructions[player].is_picking and player.has_been_hit == False:
                 if len(self.grounded_balls) > 0:
                     nearest_ball = None
-                    nearest_distance = arena_size * 10
+                    nearest_distance = self.arena_size * 10
                     for grounded_ball in self.grounded_balls:
                         distance_to_player_for_current_grounded_ball = (player.position - grounded_ball.position).length
                         if distance_to_player_for_current_grounded_ball < nearest_distance:
@@ -344,7 +250,7 @@ class Simulation(object):
         #collision!
         for ball in self.in_flight_balls[:]:
             nearest_player = None
-            nearest_distance = arena_size * 10 # really big
+            nearest_distance = self.arena_size * 10 # really big
             for player in self.players:
                 if ball.thrower != player:
                     distance = Simulation.DistanceToLineSegment(ball.position, ball.previous_position, player.position)

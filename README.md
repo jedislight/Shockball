@@ -13,6 +13,7 @@ Every time a player is hit they must run back to their starting wall before re-e
 # Creating a Team
 * Create a new python file next to the main_window.py with the name of your team
 * Create a class that inherits from Simulation.AI
+* Decorate your class with @AI.Team
 * Overload the Update() method to build your own AIOutput object based on the state of the AIInupt object
 * Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players
 

@@ -1,7 +1,10 @@
-import Simulation
+'''
+An easier way to setup stats, simply set self.stats to an array of 3 PlayerStats objects for your players, no need to define GetPlayerStats yourself
+'''
+from AI import AI
 import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 
-class EasyStatsFramework(Simulation.AI):
+class EasyStatsFramework(AI):
     def __init__(self):
         self.stats = [PlayerStatsPrebuilts.balanced, PlayerStatsPrebuilts.balanced, PlayerStatsPrebuilts.balanced]
         
