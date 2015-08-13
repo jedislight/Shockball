@@ -151,7 +151,7 @@ class Player(object):
             self.move_target= player_update_instructions.move_target
             
             distance = (player_update_instructions.move_target - self.position).length
-            velocity = min(self.run, distance)
+            velocity = min(math.sqrt(self.run), distance)
             impulse = self.move_target - self.position
             impulse.normalize()
             impulse = impulse * velocity
