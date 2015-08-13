@@ -17,13 +17,13 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Overload the Update() method to build your own AIOutput object based on the state of the AIInupt object
 * Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players
 
-# Frameworks
-Frameworks are helpful partially implemented AI Teams that can greatly streamline common development tasks. Check out Team/Basic - the whole team was written in about 5 minutes and is less than 50 lines of code
-
 The AIOutput object needs to be provided a PlayerUpdateInstructions object for each player. The PlayerUpdateInstructions object supports 4 actions:
 * is_moving - when true moves to the move_target position
 * is_passing - when true passes (harmless) to the pass_target position, pass_power can be set from 0.0 -> 1.0 to scale back the strength of the pass, defaults to full power
 * is_throwing - when true throws (harmful) to the throw_target position, throw_power can be set from 0.0 -> 1.0 to scale back the strength of the throw, defaults to full power
+
+# Frameworks
+Frameworks are helpful partially implemented AI Teams that can greatly streamline common development tasks. Check out Team/Basic - the whole team was written in about 5 minutes and is less than 50 lines of code
 
 # Running a Game
 * python main_window.py team1Name team2Name [-options]
