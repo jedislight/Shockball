@@ -93,7 +93,7 @@ class Fortress(EasyStatsFramework, ActionAIFramework, CommonQueryAIFramework):
         if instructions.move_target.y == 0.0:
             instructions.move_target.y += ai_input.arena_size * self.base_field_percent
         else:
-            instructions.move_target.y -= Simulation.arena_size * self.base_field_percent
+            instructions.move_target.y -= ai_input.arena_size * self.base_field_percent
             
         instructions.move_target.x += x_offset
         instructions.move_target.y += y_offset

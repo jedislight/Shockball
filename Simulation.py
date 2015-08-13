@@ -41,7 +41,7 @@ class Player(object):
             self.TakeDamage()
         
         #move
-        if self.has_been_hit:
+        if self.has_been_hit and self.run != 0:
             if self.team == 0:
                 direction = vector.Vector(0,-1)
             else:
@@ -52,7 +52,7 @@ class Player(object):
             if (self.team == 0 and self.position.y <= 0) or (self.team == 1 and self.position.y >= Simulation.arena_size):
                 self.has_been_hit = False
 
-        elif player_update_instructions.is_moving == True:
+        elif player_update_instructions.is_moving == True and self.run != 0:
             self.move_target= player_update_instructions.move_target
             
             distance = (player_update_instructions.move_target - self.position).length

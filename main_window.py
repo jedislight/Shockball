@@ -3,6 +3,7 @@ import os
 import inspect
 import importlib
 import argparse
+import random
 
 from Simulation import Simulation
 from AI import AI
@@ -11,7 +12,7 @@ import Team
 class Controller(object):
     def __init__(self):
         parser = argparse.ArgumentParser(description="Competitive AI programming in a dodge ball like game.")
-        parser.add_argument("teams", nargs="+", help="the 2 teams to face off")
+        parser.add_argument("teams", nargs="*", help="the 2 teams to face off")
         speed_group = parser.add_mutually_exclusive_group()
         speed_group.add_argument("--quick_sim", "-q", action="store_true", help="Simulates games as fast as possible")
         speed_group.add_argument("--fps", "-f", action="store", type=int, default=20, help="Sets simulation speed")
@@ -27,13 +28,13 @@ class Controller(object):
         self.bouncy_ball = args.bouncy_ball
         self.wins = [0,0,0]
         
-        self.ImportTeams(args)
+        self.simulation = None
+        self.all_teams = self.ImportTeams(args)
         self.team_0_ai = AI.team[0]()
         self.team_1_ai = AI.team[1]()
 
-
         self.menu_bar = Menu(self.master)
-        
+            
         self.shockball_menu = Menu(self.menu_bar)
         self.shockball_menu.add_command(label="New Game", command=self.NewGame, accelerator="F2")
         self.shockball_menu.add_checkbutton(label="Draw Targets", onvalue = True, offvalue = False, variable=self.draw_target)
@@ -49,21 +50,45 @@ class Controller(object):
         self.NewGame()
 
     def ImportTeams(self, args):
-        importlib.import_module("Team.{0}".format(args.teams[0]))
-        if len(AI.team) > 1:
-            assert False, "Found more than one team in {0}".format(args.teams[0])
-        if len(AI.team) < 1:
-            assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[0])        
-        importlib.import_module("Team.{0}".format(args.teams[1]))
-        if len(AI.team) > 2:
-            assert False, "Found more than one team in {0}".format(args.teams[1])
-        if len(AI.team) < 2:
-            assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[1])        
+        if len(args.teams) ==2:
+            importlib.import_module("Team.{0}".format(args.teams[0]))
+            if len(AI.team) > 1:
+                assert False, "Found more than one team in {0}".format(args.teams[0])
+            if len(AI.team) < 1:
+                assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[0])        
+            importlib.import_module("Team.{0}".format(args.teams[1]))
+            if len(AI.team) > 2:
+                assert False, "Found more than one team in {0}".format(args.teams[1])
+            if len(AI.team) < 2:
+                assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[1])    
+            return False
+        else:
+            teams = []
+            for _, _, files in os.walk("Team"):
+                for file in files:
+                    if "__" not in file and file.endswith(".py"):
+                        teams.append( file.replace(".py", "") )
+            random.shuffle(teams)
+            for team in teams:
+                importlib.import_module("Team.{0}".format(team))
+            return True
         
         
     def NewGame(self, event=None):
+        if self.all_teams:
+            winner = self.simulation.winning_team if self.simulation else 0
+            if winner == 2:#tie
+                winner = 0#encumbant
+            champion = AI.team.pop(winner)
+            random.shuffle(AI.team)
+            AI.team.insert(0, champion)
+            self.team_0_ai = AI.team[0]()
+            self.team_1_ai = AI.team[1]()            
+            if winner != 0:
+                self.wins=[0,0,0]
+            
         self.simulation = Simulation(self.team_0_ai, self.team_1_ai)
-
+        
         if self.bouncy_ball:
             ball = AI.InFlightBall(20.0, 41.0, 50.0,50.0, self.simulation.players[0], True)
             ball.updates_left = 9999            
@@ -80,7 +105,7 @@ class Controller(object):
                 self.simulation.Update()
             self.wins[self.simulation.winning_team] += 1
             self.DrawSimulation()
-            self.simulation = Simulation(self.team_0_ai, self.team_1_ai)
+            self.NewGame()
         else:
             self.DrawSimulation()
             self.simulation.Update()
