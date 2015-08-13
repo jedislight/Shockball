@@ -5,7 +5,8 @@ import vector
 import Frameworks.ActionAIFramework as ActionAIFramework
 import Frameworks.EasyStatsFramework as EasyStatsFramework
 import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
-import PlayerStatsPrebuilts
+import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
+
 class Fortress(EasyStatsFramework.EasyStatsFramework, ActionAIFramework.ActionAIFramework, CommonQueryAIFramework.CommonQueryAIFramework):
     def __init__(self):
         EasyStatsFramework.EasyStatsFramework.__init__(self)

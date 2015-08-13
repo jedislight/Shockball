@@ -2,7 +2,7 @@ import Simulation
 import Frameworks.ActionAIFramework as ActionAIFramework
 import Frameworks.EasyStatsFramework as EasyStatsFramework
 import Frameworks.CommonQueryAIFramework as CommonQueryAIFramework
-import PlayerStatsPrebuilts
+import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 import vector
 
 class Blitzy(ActionAIFramework.ActionAIFramework, EasyStatsFramework.EasyStatsFramework, CommonQueryAIFramework.CommonQueryAIFramework):

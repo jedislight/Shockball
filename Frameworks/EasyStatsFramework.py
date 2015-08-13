@@ -1,5 +1,5 @@
 import Simulation
-import PlayerStatsPrebuilts
+import Frameworks.PlayerStatsPrebuilts as PlayerStatsPrebuilts
 
 class EasyStatsFramework(Simulation.AI):
     def __init__(self):

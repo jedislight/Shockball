@@ -1,8 +1,10 @@
 from tkinter import *
 import os
 import inspect
+import importlib
 
 import Simulation
+import Team
 
 class Controller(object):
     def __init__(self):
@@ -12,8 +14,8 @@ class Controller(object):
         self.slow_sim = "-slow_sim" in os.sys.argv
         self.draw_target = BooleanVar(master=self.master, value="-draw_target" in os.sys.argv)
         self.bouncy_ball = "-bouncy_ball" in os.sys.argv
-        self.ai0_module = __import__(os.sys.argv[1])
-        self.ai1_module = __import__(os.sys.argv[2])
+        self.ai0_module = importlib.import_module("Team.{0}".format(os.sys.argv[1]))
+        self.ai1_module = importlib.import_module("Team.{0}".format(os.sys.argv[2]))
         self.wins = [0,0,0]
         for class_object in inspect.getmembers(self.ai0_module, inspect.isclass):
                 self.team_0_ai = class_object[1]()
