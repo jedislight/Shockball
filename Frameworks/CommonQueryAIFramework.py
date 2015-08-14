@@ -34,3 +34,17 @@ class CommonQueryAIFramework(AI):
     def GetClosestTeamateWithoutBall(self, player, ai_input):
         return self.GetClosestObject(player.position, [player for player in ai_input.player_infos if player.team == ai_input.team and player.has_ball == False])
     
+    def GetPlayerNumbered(self, number, ai_input):
+        for player in ai_input.player_infos:
+            if player.number == number:
+                return player
+        return None
+    
+    def GetHitTeammates(self, ai_input):
+        return [player for player in ai_input.player_infos if player.team == ai_input.team and player.has_been_hit]
+    
+    def Distance(self, a, b):
+        if type(a) == vector.Vector:
+            return (a-b).length
+        return (a.position - b.position).length
+    
