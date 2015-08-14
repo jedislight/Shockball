@@ -37,10 +37,12 @@ def GetSpread():
     
     return spread
 
-results = {}
+hit_results = {}
+harmony_results = {}
 spread = GetSpread()
 for key in spread.keys():
-    results[key] = []
+    hit_results[key] = []
+    harmony_results[key] = []
     
 for t in range(10000):
     hits = 0
@@ -49,13 +51,18 @@ for t in range(10000):
         hits += 1
         done = []
         for p in spread.keys():
+            harmony = 1 * (1.0 + 0.1*spread[p].run)*(1.0 + 0.1*spread[p].throw)*(1.0 + 0.1*spread[p].pick)
+            harmony_results[p].append(harmony)            
             spread[p].TakeDamage()
             if spread[p].run == 0 or spread[p].throw == 0 or spread[p].pick == 0:
-                results[p].append(hits)
+                hit_results[p].append(hits)
                 done.append(p)
         for d in done:
             del spread[d]
-    averages = {}
-    for key in results.keys():
-        averages[key] = sum(results[key]) / len(results[key])
-    print(averages)    
+    average_hits = {}
+    average_harmony = {}
+    for key in hit_results.keys():
+        average_hits[key] = sum(hit_results[key]) / len(hit_results[key])
+        average_harmony[key] = sum(harmony_results[key]) / len(harmony_results[key])
+    print("hits: \n\t", average_hits)  
+    print("harmony: \n\t", average_harmony)
