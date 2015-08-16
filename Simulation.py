@@ -30,7 +30,7 @@ class Player(object):
         self.run = stats.run
         self.pick = stats.pick
         self.throw = stats.throw
-        self.stamina = stats.stamina
+        self.stamina = stats.stamina * 2 - 1
         
     def Update(self, player_update_instructions):
         self.updates_till_tired -= 1
