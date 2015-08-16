@@ -43,6 +43,9 @@ class CommonQueryAIFramework(AI):
     def GetHitTeammates(self, ai_input):
         return [player for player in ai_input.player_infos if player.team == ai_input.team and player.has_been_hit]
     
+    def GetOpponents(self, ai_input):
+        return [player for player in ai_input.player_infos if player.team != ai_input.team]
+    
     def Distance(self, a, b):
         if type(a) == vector.Vector:
             return (a-b).length
