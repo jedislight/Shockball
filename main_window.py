@@ -56,11 +56,14 @@ class Controller(object):
                 assert False, "Found more than one team in {0}".format(args.teams[0])
             if len(AI.team) < 1:
                 assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[0])        
-            importlib.import_module("Team.{0}".format(args.teams[1]))
-            if len(AI.team) > 2:
-                assert False, "Found more than one team in {0}".format(args.teams[1])
-            if len(AI.team) < 2:
-                assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[1])    
+            if args.teams[0] == args.teams[1]:
+                AI.team = AI.team * 2
+            else:
+                importlib.import_module("Team.{0}".format(args.teams[1]))
+                if len(AI.team) > 2:
+                    assert False, "Found more than one team in {0}".format(args.teams[1])
+                if len(AI.team) < 2:
+                    assert False, "Found no team in {0}. Did you remember to add the @AI.Team decorator?".format(args.teams[1])    
             return False
         else:
             teams = []
