@@ -21,6 +21,7 @@ The AIOutput object needs to be provided a PlayerUpdateInstructions object for e
 * is_moving - when true moves to the move_target position
 * is_passing - when true passes (harmless) to the pass_target position, pass_power can be set from 0.0 -> 1.0 to scale back the strength of the pass, defaults to full power
 * is_throwing - when true throws (harmful) to the throw_target position, throw_power can be set from 0.0 -> 1.0 to scale back the strength of the throw, defaults to full power
+* is_picking - when true tries to pick up a ball near the player
 
 # Frameworks
 Frameworks are helpful partially implemented AI Teams that can greatly streamline common development tasks. Check out Team/Basic - the whole team was written in about 5 minutes and is less than 50 lines of code
