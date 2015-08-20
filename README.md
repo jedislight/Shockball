@@ -15,7 +15,7 @@ Every time a player is hit they must run back to their starting wall before re-e
 * Create a class that inherits from Simulation.AI
 * Decorate your class with @AI.Team
 * Overload the Update() method to build your own AIOutput object based on the state of the AIInupt object
-* Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players
+* Overload the GetPlayerStats() method to build your player stats for your 1,2, & 3 players.
 
 The AIOutput object needs to be provided a PlayerUpdateInstructions object for each player. The PlayerUpdateInstructions object supports 4 actions:
 * is_moving - when true moves to the move_target position
