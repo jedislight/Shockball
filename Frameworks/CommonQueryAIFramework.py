@@ -51,3 +51,5 @@ class CommonQueryAIFramework(AI):
             return (a-b).length
         return (a.position - b.position).length
     
+    def GetTeammates(self, ai_input):
+        return [player for player in ai_input.player_infos if player.team == ai_input.team]    
