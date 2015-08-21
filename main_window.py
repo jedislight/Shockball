@@ -154,11 +154,6 @@ class Controller(object):
         self.master.mainloop()
         
     def Update(self):
-        for stats in self.player_stats[1:]: #clear
-            stats.Update(None)
-        for player in self.simulation.players:#set
-            self.player_stats[player.number].Update(player)
-        self.wins_text.set("Red(" + self.team_0_ai.__class__.__name__ +"):" + str(self.wins[0]) + " Blue("+self.team_1_ai.__class__.__name__+"): " + str(self.wins[1]) + " Draw: " + str(self.wins[2]))
         if self.quick_sim:
             while self.simulation.winning_team < 0:
                 self.simulation.Update()
@@ -174,6 +169,12 @@ class Controller(object):
         self.master.after(int(1000.0/self.fps),self.Update)
             
     def DrawSimulation(self):
+        for stats in self.player_stats[1:]: #clear
+            stats.Update(None)
+        for player in self.simulation.players:#set
+            self.player_stats[player.number].Update(player)
+        self.wins_text.set("Red(" + self.team_0_ai.__class__.__name__ +"):" + str(self.wins[0]) + " Blue("+self.team_1_ai.__class__.__name__+"): " + str(self.wins[1]) + " Draw: " + str(self.wins[2]))
+        
         self.w.delete(ALL)
         c = "white"
         if self.simulation.winning_team == 1:
