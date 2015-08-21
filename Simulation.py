@@ -260,14 +260,15 @@ class Simulation(object):
             player = nearest_player
             if player != None and nearest_distance <= 2:
                 #collision!
-                if player.has_been_hit:
+                if player.has_been_hit or player.has_ball:
                     self.grounded_balls.append(GroundedBall(ball.position.x, ball.position.y))
                 elif ball.is_throw:
                     player.TakeDamage()
                     player.has_been_hit = True
                     self.grounded_balls.append(GroundedBall(ball.position.x, ball.position.y))
-                else:  
+                else:
                     player.has_ball = True
+                    
                 self.in_flight_balls.remove(ball)
         
         #player elimination
