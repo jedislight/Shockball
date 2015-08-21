@@ -32,6 +32,8 @@ class Controller(object):
         self.all_teams = self.ImportTeams(args)
         self.team_0_ai = AI.team[0]()
         self.team_1_ai = AI.team[1]()
+        
+        self.wins_text = StringVar(master=self.master, value="")
 
         self.menu_bar = Menu(self.master)
             
@@ -43,8 +45,11 @@ class Controller(object):
         self.menu_bar.add_cascade(label = "Shockball", menu=self.shockball_menu)
         
         self.master.config(menu = self.menu_bar)
-        
-        self.w = Canvas(self.master, width=500, height=500)
+        self.panel = Frame(master=self.master, width = 700, height = 700)
+        self.header_label = Label(self.panel, textvariable=self.wins_text)
+        self.header_label.pack()
+        self.panel.pack()
+        self.w = Canvas(self.panel, width=500, height=500, bd=3, background="black")
         self.w.pack()
         
         self.NewGame()
@@ -103,6 +108,7 @@ class Controller(object):
         self.master.mainloop()
         
     def Update(self):
+        self.wins_text.set("Red(" + self.team_0_ai.__class__.__name__ +"):" + str(self.wins[0]) + " Blue("+self.team_1_ai.__class__.__name__+"): " + str(self.wins[1]) + " Draw: " + str(self.wins[2]))
         if self.quick_sim:
             while self.simulation.winning_team < 0:
                 self.simulation.Update()
@@ -125,7 +131,6 @@ class Controller(object):
         if self.simulation.winning_team == 0:
             c = "pink"
         self.w.create_rectangle(0,0,Simulation.arena_size * 6, Simulation.arena_size * 6, fill = c)
-        self.w.create_text(2,2, anchor = NW, text = "Red(" + self.team_0_ai.__class__.__name__ +"):" + str(self.wins[0]) + " Blue("+self.team_1_ai.__class__.__name__+"): " + str(self.wins[1]) + " Draw: " + str(self.wins[2]))
         for player in self.simulation.le_tired_players:
             color = "pink"
             if player.team == 1:
