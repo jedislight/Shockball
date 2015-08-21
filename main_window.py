@@ -85,11 +85,11 @@ class Controller(object):
             champion = AI.team.pop(winner)
             random.shuffle(AI.team)
             AI.team.insert(0, champion)
-            self.team_0_ai = AI.team[0]()
-            self.team_1_ai = AI.team[1]()            
             if winner != 0:
                 self.wins=[0,0,0]
-            
+
+        self.team_0_ai = AI.team[0]()
+        self.team_1_ai = AI.team[1]()             
         self.simulation = Simulation(self.team_0_ai, self.team_1_ai)
         
         if self.bouncy_ball:
