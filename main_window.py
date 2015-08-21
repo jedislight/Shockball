@@ -91,12 +91,12 @@ class Controller(object):
             group["stamina"].grid(row=t-1, column=4)
             
         self.header_panel = Frame(master=self.master)
-        self.header_label = Label(self.header_panel, textvariable=self.wins_text, font=f)
-        self.header_label.grid()
-        self.header_panel.grid(row=1, column = 1)
+        self.header_label = Label(self.header_panel, textvariable=self.wins_text, font=f, justify = RIGHT)
+        self.header_label.grid(row=0, column=0)
+        self.header_panel.grid(row=0, column = 0)
         self.side_bar.grid(row=1, column = 0)
-        self.w = Canvas(self.header_panel, width=500, height=500, bd=3, background="black")
-        self.w.grid(row=2, column = 0)
+        self.w = Canvas(self.master, width=500, height=500, bd=3, background="black")
+        self.w.grid(row=1, column = 1)
         
         self.NewGame()
 
