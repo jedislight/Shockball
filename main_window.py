@@ -8,7 +8,31 @@ import random
 from Simulation import Simulation
 from AI import AI
 import Team
-
+class UIPlayerStats(object):
+    def __init__(self, master):
+        self.run = StringVar(master=master, value=0)
+        self.pick = StringVar(master=master, value=0)
+        self.throw = StringVar(master=master, value=0)
+        self.stamina = StringVar(master=master, value=0)
+        self.number = StringVar(master=master, value=0)
+        self.in_game = BooleanVar(master=master, value=False)
+        
+    def Update(self, player):
+        if player:
+            self.run.set(("Run: " + "*" * player.run).ljust(10))
+            self.pick.set(("Pick: "+ "*" * player.pick).ljust(11))
+            self.throw.set(("Throw: " + "*" * player.throw).ljust(12))
+            self.stamina.set(("Stamina: " + "*" * player.stamina).ljust(16))
+            self.number.set(player.number)
+            self.in_game.set(True)
+        else:
+            self.run.set(("Run: " + "*" * 0).ljust(10))
+            self.pick.set(("Pick: "+ "*" * 0).ljust(11))
+            self.throw.set(("Throw: " + "*" * 0).ljust(12))
+            self.stamina.set(("Stamina: " + "*" * 0).ljust(16))            
+            self.in_game.set(False)
+    
+        
 class Controller(object):
     def __init__(self):
         parser = argparse.ArgumentParser(description="Competitive AI programming in a dodge ball like game.")
@@ -34,7 +58,9 @@ class Controller(object):
         self.team_1_ai = AI.team[1]()
         
         self.wins_text = StringVar(master=self.master, value="")
-
+        self.player_stats = [None, UIPlayerStats(self.master),UIPlayerStats(self.master),UIPlayerStats(self.master),UIPlayerStats(self.master),UIPlayerStats(self.master),UIPlayerStats(self.master)]
+        
+        f = ("Courier New", 16)
         self.menu_bar = Menu(self.master)
             
         self.shockball_menu = Menu(self.menu_bar)
@@ -45,12 +71,32 @@ class Controller(object):
         self.menu_bar.add_cascade(label = "Shockball", menu=self.shockball_menu)
         
         self.master.config(menu = self.menu_bar)
-        self.panel = Frame(master=self.master, width = 700, height = 700)
-        self.header_label = Label(self.panel, textvariable=self.wins_text)
-        self.header_label.pack()
-        self.panel.pack()
-        self.w = Canvas(self.panel, width=500, height=500, bd=3, background="black")
-        self.w.pack()
+        self.side_bar = Frame(master=self.master)
+        self.player_stats_widgets = {}
+        for t in range(1,7):
+            c = "red"
+            if t >= 4:
+                c = "blue"
+            self.player_stats_widgets[t] = {}
+            group = self.player_stats_widgets[t]
+            group["number"] = Label(self.side_bar, textvar=self.player_stats[t].number, fg=c, font=f)
+            group["run"] = Label(self.side_bar, textvar=self.player_stats[t].run, fg=c, font=f)
+            group["pick"] = Label(self.side_bar, textvar=self.player_stats[t].pick, fg=c, font=f)
+            group["throw"] = Label(self.side_bar, textvar=self.player_stats[t].throw, fg=c, font=f)
+            group["stamina"] = Label(self.side_bar, textvar=self.player_stats[t].stamina, fg=c, font=f)
+            group["number"].grid(row=t-1, column=0)
+            group["run"].grid(row=t-1, column=1)
+            group["pick"].grid(row=t-1, column=2)
+            group["throw"].grid(row=t-1, column=3)
+            group["stamina"].grid(row=t-1, column=4)
+            
+        self.header_panel = Frame(master=self.master)
+        self.header_label = Label(self.header_panel, textvariable=self.wins_text, font=f)
+        self.header_label.grid()
+        self.header_panel.grid(row=1, column = 1)
+        self.side_bar.grid(row=1, column = 0)
+        self.w = Canvas(self.header_panel, width=500, height=500, bd=3, background="black")
+        self.w.grid(row=2, column = 0)
         
         self.NewGame()
 
@@ -108,6 +154,10 @@ class Controller(object):
         self.master.mainloop()
         
     def Update(self):
+        for stats in self.player_stats[1:]: #clear
+            stats.Update(None)
+        for player in self.simulation.players:#set
+            self.player_stats[player.number].Update(player)
         self.wins_text.set("Red(" + self.team_0_ai.__class__.__name__ +"):" + str(self.wins[0]) + " Blue("+self.team_1_ai.__class__.__name__+"): " + str(self.wins[1]) + " Draw: " + str(self.wins[2]))
         if self.quick_sim:
             while self.simulation.winning_team < 0:
