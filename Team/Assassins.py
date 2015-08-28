@@ -34,11 +34,9 @@ class Assassins(ActionAIFramework, EasyStatsFramework, CommonQueryAIFramework):
         if ball:
             ball_to_player = player.position - ball.position
             distance = ball_to_player.length
-            if distance < 40:
-                angel_of_approach = ball_to_player * ball.velocity
-                if angel_of_approach > .5:
-                    instructions.move_target = player.position + ball_to_player
-                    return True
+            if distance < 40 and self.IsBallGoingToward(ball, player.position):
+                instructions.move_target = player.position + ball_to_player
+                return True
         return False    
     
     def Action_CullTheWeak(self, player, instructions, ai_input):

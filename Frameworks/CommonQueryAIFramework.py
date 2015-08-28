@@ -53,3 +53,14 @@ class CommonQueryAIFramework(AI):
     
     def GetTeammates(self, ai_input):
         return [player for player in ai_input.player_infos if player.team == ai_input.team]    
+    
+    def IsBallGoingToward(self, ball, position):
+        if ball:
+            ball_to_object = position - ball.position
+            ball_to_object.normalize()
+            ball_velocity_normalized = vector.Vector(ball.velocity.x, ball.velocity.y)
+            ball_velocity_normalized.normalize()
+            angel_of_approach = ball_to_object * ball_velocity_normalized
+            if angel_of_approach > .5:
+                return True
+        return False      
